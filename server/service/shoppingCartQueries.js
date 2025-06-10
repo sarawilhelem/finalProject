@@ -15,9 +15,11 @@ export async function queryGetItems(email) {
     return result;
   }
 
-  export async function queryPostItems(cart){
-
-    let query =`INSERT INTO shoppingcart (email, item_id, size, price, amount) VALUES (?, ?)`;
-    const [result] = await con.query(query, cart);
-    return result;
-  }
+export async function queryPostItems(cart) {
+    let query = `INSERT INTO shoppingcart (email, item_id, size, price, amount) VALUES (?, ?, ?, ?, ?)`;
+    for (const item of cart) {
+        const params = [item.email, item.item_id, item.size, item.price, item.amount];
+        await con.query(query, params);
+    }
+    return;
+}

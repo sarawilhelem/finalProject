@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import inventoryRouter from './routes/inventory.js';
 import pricesRouter from './routes/prices.js';
 import usersRouter from './routes/users.js';
+import shoppingCartRouter from './routes/shoppingCart.js';
 dotenv.config();
 
 const app = express();

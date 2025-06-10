@@ -3,19 +3,16 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 const CartContext = createContext();
 export const useCart = () => useContext(CartContext);
 
-export  function CartProvider({children}) {
+export function CartProvider({ children }) {
 
-    const [cartItems, setCartItems] = useState(async() => {
-        const currentUser=JSON.parse(localStorage.getItem('currentUser'));
-        console.log(currentUser)
-        currentUser?
-        await requests.get(`shoppingCart/?email=${currentUser}`)
-         : [];
-    });
+    const [cartItems, setCartItems] = useState([]);
 
 
-    useEffect(async() => {
-        await requests.post('shoppingCart',cartItems, 'POST')
+    useEffect( () => {
+        const postCart = async () => {
+            await requests.post('shoppingCart', cartItems, 'POST');
+        };
+        postCart();
     }, [cartItems]);
 
     const addItemToCart = (item) => {
@@ -25,9 +22,9 @@ export  function CartProvider({children}) {
     const removeItemFromCart = (itemToRemove) => {
         setCartItems((prevItems) => prevItems.filter(item => item !== itemToRemove));
     };
-    
+
     return (
-        <CartContext.Provider value={{ cartItems, addItemToCart, removeItemFromCart }}>
+        <CartContext.Provider value={{ cartItems, addItemToCart, setCartItems, removeItemFromCart }}>
             {children}
         </CartContext.Provider>
     );

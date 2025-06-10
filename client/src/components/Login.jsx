@@ -1,7 +1,11 @@
 import React from "react";
 import { useState } from "react";
 import requests from "./tools/requests";
+import { useCart } from "./tools/CartContext"; 
+
 export default function Login() {
+        const { setCartItems } = useCart(); 
+
     const [details, setDetails] = useState({ email: "", password: "" });
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [successLogin, setSuccessLogin] = useState("")
@@ -14,6 +18,11 @@ export default function Login() {
                 localStorage.setItem("currentUser", JSON.stringify(details.email));
                 setSuccessLogin(checkOrAddUser.message)
                 setIsConnected(true)
+                let userCart;
+                if (checkOrAddUser.message =="Login successful") {
+                 userCart = await requests.get(`shoppingcart/${details.email}`);
+                }
+                setCartItems(userCart || []);
                 setTimeout(() => {
                     setIsModalOpen(false);
                 }, 3000);

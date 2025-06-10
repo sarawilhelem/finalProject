@@ -5,11 +5,19 @@ import { useCart } from './tools/CartContext';
 const ShoppingCart = () => {
     const { cartItems, removeItemFromCart } = useCart();
 
+    const getUpdatedCart = async () => {
+        const email = localStorage.getItem("currentUser");
+        if(email)
+            await requests.post('shoppingCart/getUpdateCart', email, 'POST');
+        
+    }
+
 
     
     return (
         <div>
             <h2>עגלת קניות</h2>
+            <button onClick={getUpdatedCart}>ביצוע רכישה</button>
             <ul>
                 {cartItems.map((item, index) => (
                     <li key={index}>
