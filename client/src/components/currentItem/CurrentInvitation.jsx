@@ -13,7 +13,7 @@ export default function CurrentInvitation() {
     const [totalPrice, setTotalPrice] = useState(0);
     const [prices, setPrices] = useState([]);
     const [selectedSize, setSelectedSize] = useState(''); 
-
+    const [selectedType, setSelectedType] = useState('');
     useEffect(() => {
         if (location.state) {
             setItem(prevItem => ({
@@ -56,6 +56,16 @@ export default function CurrentInvitation() {
                     <img src={item.src} alt={item.title} />
 
                     <div>
+                        <label>בחר סוג דף:</label>
+                        <select value={selectedType} onChange={(e) => setSelectedType(e.target.value)}>
+                            <option value="">בחר סוג</option>
+                            {prices&&prices.map((priceItem, index) => (
+                                <option key={index} value={priceItem.type}>{priceItem.type}</option> // הוספת סוגי הנייר מתוך הטבלה
+                            ))}
+                        </select>
+                    </div>
+
+                    <div>
                         <label>בחר גודל:</label>
                         {prices.map((priceItem, i) => (
                             <div key={i}>
@@ -63,6 +73,7 @@ export default function CurrentInvitation() {
                                     type="radio"
                                     value={priceItem.size}
                                     checked={selectedSize === priceItem.size}
+                                    
                                     onChange={() => setSelectedSize(priceItem.size)} // Update selected size
                                 />
                                 <span>{priceItem.size}</span>
@@ -84,6 +95,7 @@ export default function CurrentInvitation() {
                 </label>
 
                 <div>מחיר: {totalPrice}</div>
+
             </div>
 
             <div>
