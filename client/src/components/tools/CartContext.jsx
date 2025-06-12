@@ -1,26 +1,31 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import requests from './requests';
 
 const CartContext = createContext();
 export const useCart = () => useContext(CartContext);
 
 export function CartProvider({ children }) {
-
     const [cartItems, setCartItems] = useState([]);
+    const [hasUpdated, setHasUpdated] = useState(false); 
 
-
-    useEffect( () => {
+    useEffect(() => {
         const postCart = async () => {
-            await requests.post('shoppingCart', cartItems, 'POST');
+            if (hasUpdated) { 
+                await requests.post('shoppingCart', cartItems, 'POST');
+            }
         };
+
         postCart();
-    }, [cartItems]);
+    }, [cartItems, hasUpdated]);
 
     const addItemToCart = (item) => {
         setCartItems((prevItems) => [...prevItems, item]);
+        setHasUpdated(true); 
     };
 
     const removeItemFromCart = (itemToRemove) => {
         setCartItems((prevItems) => prevItems.filter(item => item !== itemToRemove));
+        setHasUpdated(true); 
     };
 
     return (

@@ -12,7 +12,7 @@ const PORT = process.env.PORT;
 app.use(cors());
 app.use(express.json()); 
 
-app.use('/invitations', inventoryRouter);
+app.use('/inventory', inventoryRouter);
 app.use('/prices', pricesRouter);
 app.use('/users',usersRouter);
 app.use('/shoppingCart',shoppingCartRouter)

@@ -1,6 +1,8 @@
 
 import React from 'react';
 import { useCart } from './tools/CartContext';
+import requests from './tools/requests';
+
 
 const ShoppingCart = () => {
     const { cartItems, removeItemFromCart } = useCart();

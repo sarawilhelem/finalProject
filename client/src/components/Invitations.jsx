@@ -2,22 +2,24 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import requests from './tools/requests';
 import CurrentItem from './CurrentItem';
+import { Link } from 'react-router-dom'; // Import Link
+
 
 export default function Invitations() {
     const [invitationsData, setInvitationsData] = useState([])
     const [error, setError] = useState(null)
-    const [currentItem, setCurrentItem] = useState({ isActive: false, bencher: null });
-    //const [invitationsizes, setInvitationsizes] = useState([])
-    let invitationsizes;
+    const [prices, setPrices] = useState([])
+   // let invitationPrices;
     useEffect(() => {
         const fetchData = async () => {
             try {
 
-                const invitations = await requests.get(`invitations/?category=furniture`);
-                 invitationsizes = await requests.get(`prices/?category=furniture`);
-                 setInvitationsData(invitations);
+                const invitations = await requests.get(`inventory/?category=invitations`);
+                const prices = await requests.get(`prices/?category=invitations`);
+                
+                setInvitationsData(invitations);
 
-                // setInvitationsizes(invitationsize);
+               setPrices(prices);
             }
             catch (error) {
                 setError(error)
@@ -28,16 +30,17 @@ export default function Invitations() {
 
     return (
         <>
+
             {invitationsData && invitationsData.map((item, i) => (
                 <div key={i}>
-                    <img src={item.src}   onClick={() => { setCurrentItem(true, item) }} />
+                    <Link to={`/currentItem/${item.id}`} state={{item,prices}}>
+                        <img src={item.src} />
+                    </Link>
                     <span>{item.title}</span>
                 </div>
             ))}
+            {error && <div>שגיאה: {error.message}</div>}
 
-{/* {CurrentItem.isActive && <CurrentItem item={CurrentItem} />} */}
-
-            {currentItem.isActive && <CurrentItem item={currentItem} sizes={invitationsizes} />}
         </>
     )
 }
