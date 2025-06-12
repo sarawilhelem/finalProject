@@ -1,5 +1,4 @@
 import { queryCheckUser, queryAddUser } from '../service/usersOueries.js';
-import bcrypt from 'bcrypt';
 
 export async function getDetails(req, res) {
     try {

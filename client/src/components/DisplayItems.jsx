@@ -1,23 +1,25 @@
 import { useState } from 'react';
 import { useEffect } from 'react';
 import requests from './tools/requests';
-import CurrentItem from './CurrentItem';
-import { Link } from 'react-router-dom'; // Import Link
+import { Link } from 'react-router-dom'; 
+import { useParams } from 'react-router-dom';
 
 
-export default function Invitations() {
-    const [invitationsData, setInvitationsData] = useState([])
+
+export default function DisplayItems() {
+    const [itemsData, setItemsData] = useState([])
     const [error, setError] = useState(null)
     const [prices, setPrices] = useState([])
-   // let invitationPrices;
+    const { category } = useParams();
+
     useEffect(() => {
         const fetchData = async () => {
             try {
 
-                const invitations = await requests.get(`inventory/?category=invitations`);
-                const prices = await requests.get(`prices/?category=invitations`);
+                const items = await requests.get(`inventory/?category=${category}`);
+                const prices = await requests.get(`prices/?category=${category}`);
                 
-                setInvitationsData(invitations);
+                setItemsData(items);
 
                setPrices(prices);
             }
@@ -26,14 +28,14 @@ export default function Invitations() {
             }
         }
         fetchData();
-    }, []);
+    }, [category]);
 
     return (
         <>
-
-            {invitationsData && invitationsData.map((item, i) => (
+{console.log(category)}
+            {itemsData && itemsData.map((item, i) => (
                 <div key={i}>
-                    <Link to={`/currentItem/${item.id}`} state={{item,prices}}>
+                    <Link to={`/${category}/current/${item.id}`} state={{item,prices}}>
                         <img src={item.src} />
                     </Link>
                     <span>{item.title}</span>

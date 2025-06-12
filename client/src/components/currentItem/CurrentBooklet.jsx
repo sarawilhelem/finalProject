@@ -1,17 +1,18 @@
 import { useState, useEffect } from 'react';
-import { useCart } from './tools/CartContext';
-import PayPalButton from './Payment';
+import { useCart } from '../tools/CartContext';
+import PayPalButton from '../Payment';
 import { useLocation } from 'react-router-dom';
 
-export default function CurrentItem() {
+export default function CurrentInvitation() {
     const location = useLocation();
-    const [item, setItem] = useState({ paper: '', size: '', quantity: 1, title: '', src: '', price: 0 });
+    const [item, setItem] = useState({ paper: '', size: '', quantity: 100, title: '', src: null, price: 0 });
     const { addItemToCart } = useCart();
     const [selectedFile, setSelectedFile] = useState(null);
     const [beyondPayment, setBeyondPayment] = useState(false);
-    const [quantity, setQuantity] = useState(1);
+    const [quantity, setQuantity] = useState(100);
     const [totalPrice, setTotalPrice] = useState(0);
     const [prices, setPrices] = useState([]);
+    const [selectedSize, setSelectedSize] = useState(''); 
 
     useEffect(() => {
         if (location.state) {
@@ -21,7 +22,7 @@ export default function CurrentItem() {
                 src: location.state.item.src,
                 title: location.state.item.title,
             }));
-            setPrices(location.state.prices); // Assumes prices is an array of objects
+            setPrices(location.state.prices);
         }
     }, [location.state]);
 
@@ -32,16 +33,17 @@ export default function CurrentItem() {
             ...prevItem,
             price: calculatedPrice,
         }));
-    }, [quantity, prices]);
-
+    }, [quantity, prices, selectedSize]); 
     const handleFileChange = (e) => {
         setSelectedFile(e.target.files[0]);
     };
 
     const calculateTotalPrice = () => {
-        if (prices && prices.length > 0) {
-            const pricePerItem = prices[0].price; // Assuming prices[0] has the price
-            return pricePerItem * quantity;
+        if (prices && prices.length > 0 && selectedSize) {
+            const priceItem = prices.find(priceItem => priceItem.size === selectedSize); 
+            if (priceItem) {
+                return priceItem.price * quantity; 
+            }
         }
         return 0;
     };
@@ -53,11 +55,20 @@ export default function CurrentItem() {
                     <span>{item.title}</span>
                     <img src={item.src} alt={item.title} />
 
-                    {prices.map((priceItem, i) => (
-                        <div key={i}>
-                            <span>{priceItem.size}</span>
-                        </div>
-                    ))}
+                    <div>
+                        <label>בחר גודל:</label>
+                        {prices.map((priceItem, i) => (
+                            <div key={i}>
+                                <input
+                                    type="radio"
+                                    value={priceItem.size}
+                                    checked={selectedSize === priceItem.size}
+                                    onChange={() => setSelectedSize(priceItem.size)} // Update selected size
+                                />
+                                <span>{priceItem.size}</span>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             )}
 

@@ -20,7 +20,7 @@ async function createTables() {
     // await con.query(sqlCreateUsers)
     // await con.query(sqlInsertUsers)
     // console.log("users table created");
-    const sqlCreateUsers = "CREATE TABLE IF NOT EXISTS users (email VARCHAR(20) , password VARCHAR(15), PRIMARY KEY(email));";
+    const sqlCreateUsers = "CREATE TABLE IF NOT EXISTS users (id int AUTO_INCREMENT, email VARCHAR(20) , password VARCHAR(15), PRIMARY KEY(id));";
     const sqlCreateShoppingCart = "CREATE TABLE IF NOT EXISTS shoppingCart (email VARCHAR(20)  REFERENCES users(email), item_id INTEGER, size VARCHAR(10), price FLOAT, amount INTEGER, PRIMARY KEY(email, item_id));";
 
     await con.query(sqlCreateUsers);
